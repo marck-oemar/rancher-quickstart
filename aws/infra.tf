@@ -26,6 +26,8 @@ resource "aws_key_pair" "quickstart_key_pair" {
 resource "aws_security_group" "rancher_sg_allowall" {
   name        = "${var.prefix}-rancher-allowall"
   description = "Rancher quickstart - allow all traffic"
+  vpc_id      = data.aws_vpc.active_vpc.id
+
 
   ingress {
     from_port   = "0"
@@ -48,11 +50,13 @@ resource "aws_security_group" "rancher_sg_allowall" {
 
 # AWS EC2 instance for creating a single node RKE cluster and installing the Rancher server
 resource "aws_instance" "rancher_server" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = var.instance_type
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  subnet_id              = data.aws_subnet.subnet.id
+  key_name               = aws_key_pair.quickstart_key_pair.key_name
+  vpc_security_group_ids = [aws_security_group.rancher_sg_allowall.id]
 
-  key_name        = aws_key_pair.quickstart_key_pair.key_name
-  security_groups = [aws_security_group.rancher_sg_allowall.name]
+  associate_public_ip_address = true
 
   user_data = templatefile(
     join("/", [path.module, "../cloud-common/files/userdata_rancher_server.template"]),
@@ -112,9 +116,10 @@ module "rancher_common" {
 resource "aws_instance" "quickstart_node" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
+  subnet_id     = data.aws_subnet.subnet.id
 
-  key_name        = aws_key_pair.quickstart_key_pair.key_name
-  security_groups = [aws_security_group.rancher_sg_allowall.name]
+  key_name               = aws_key_pair.quickstart_key_pair.key_name
+  vpc_security_group_ids = [aws_security_group.rancher_sg_allowall.id]
 
   user_data = templatefile(
     join("/", [path.module, "files/userdata_quickstart_node.template"]),
@@ -124,6 +129,9 @@ resource "aws_instance" "quickstart_node" {
       register_command = module.rancher_common.custom_cluster_command
     }
   )
+
+  associate_public_ip_address = true
+
 
   provisioner "remote-exec" {
     inline = [

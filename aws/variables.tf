@@ -3,16 +3,7 @@
 // TODO - use null defaults
 
 # Required
-variable "aws_access_key" {
-  type        = string
-  description = "AWS access key used to create infrastructure"
-}
 
-# Required
-variable "aws_secret_key" {
-  type        = string
-  description = "AWS secret key used to create AWS infrastructure"
-}
 
 variable "aws_region" {
   type        = string
@@ -72,4 +63,12 @@ variable "rancher_server_admin_password" {
 # Local variables used to reduce repetition
 locals {
   node_username = "ubuntu"
+}
+
+variable "vpc_tag" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
 }

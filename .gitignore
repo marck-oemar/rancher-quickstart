@@ -21,3 +21,4 @@ vagrant/local_config.yaml
 
 # MacOS junk
 .DS_Store
+aws/state.tf

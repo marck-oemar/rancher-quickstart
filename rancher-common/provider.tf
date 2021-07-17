@@ -1,10 +1,10 @@
 # Local provider
-provider "local" {
-}
+# provider "local" {
+# }
 
 # RKE provider
-provider "rke" {
-}
+# provider "rke" {
+# }
 
 # Kubernetes provider
 provider "k8s" {

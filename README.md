@@ -1,4 +1,9 @@
 # Quickstart examples for Rancher
+FORKED from https://github.com/marck-oemar/rancher-quickstart and 
+optimized the AWS example to make it work with
+  - remote state
+  - environment AWS credentials
+  - no-default-vpc
 
 Quickly stand up an HA-style Rancher management server in your infrastructure provider of choice.
 

@@ -18,3 +18,15 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 }
+
+data "aws_vpc" "active_vpc" {
+  state = "available"
+
+  tags = {
+    Name = var.vpc_tag
+  }
+}
+
+data "aws_subnet" "subnet" {
+  id = var.subnet_id
+}
